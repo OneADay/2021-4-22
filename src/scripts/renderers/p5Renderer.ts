@@ -17,7 +17,7 @@ let offset;
 
 export default class P5Renderer implements BaseRenderer{
 
-    colors = ['#fcb54c', '#dfded2', '#f4415d', '#1eaaa9', '#f39092', '#2d3168'];
+    colors = ['#D1CDC4', '#340352', '#732A70', '#FF6EA7', '#FFE15F'];
     backgroundColor = '#FFFFFF';
 
     canvas: HTMLCanvasElement;
@@ -91,9 +91,11 @@ export default class P5Renderer implements BaseRenderer{
             {
               for (let j = 0; j < image.height; j++)
               {
+                  //warp
                 let w = ((s.map(1 + s.sin((s.TWO_PI * j * freq.x) / image.height + dh), 0, 2, minSize.x, 1) * image.width));
                 let h = ((s.map(1 + s.sin((s.TWO_PI * i * freq.y) / image.width + dw), 0, 2, minSize.y, 1) * image.height));
 
+                //map
                 if ((image.width - w) / 2 <= i 
                 && i < (image.width + w) / 2
                 && ((image.height - h) / 2 <= j 
