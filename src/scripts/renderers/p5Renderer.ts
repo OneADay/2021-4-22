@@ -16,7 +16,7 @@ let offset;
 
 export default class P5Renderer implements BaseRenderer{
 
-    colors = ['#4EEC6C', '#FFEB34', '#00A7FF', '#FF6100', '#FF0053'];
+    colors = ['#fcb54c', '#dfded2', '#f4415d', '#1eaaa9', '#f39092', '#2d3168'];
     backgroundColor = '#FFFFFF';
 
     canvas: HTMLCanvasElement;
@@ -47,29 +47,32 @@ export default class P5Renderer implements BaseRenderer{
 
     protected setup(s) {
         freq = s.createVector(1, 1);
-        minSize = s.createVector(.2, .7);//image min size (width and height)
+        minSize = s.createVector(.7, .7);//image min size (width and height)
 
         let renderer = s.createCanvas(this.width, this.height);
         this.canvas = renderer.canvas;
 
         image = s.createGraphics(this.width, this.height);
 
-        image.background(0, 100, 50, 255);
-
-        image.noStroke();
-        image.fill(0, 50, 100, 255);
-        for (let i = 0; i < 4; i++) {
-            image.rect(0, (this.height / 8) * (i * 2), this.width, this.height / 8);
+        /*
+        image.strokeCap(s.PROJECT);
+        for (let i = 0; i < 10; i++) {
+            image.strokeWeight(10 + srandom() * 20);
+            image.line(-image.width + (i * 10), image.height, image.width, -image.height + (i * 10));
+            image.stroke(this.colors[Math.floor(srandom() * this.colors.length)]);
         }
+        */
+        image.fill(255, 0, 0);
+        image.rect(0, 20, this.width, 20);
+        image.circle(this.width / 2, this.height / 2, 100);
 
+        //this.animating = false;
         //s.image(image, 0, 0, s.width, s.height);
-
+        
         if (this.width * this.height > 0)
         {
-          //px = new Array(this.width * this.height);
           image.loadPixels();
           px = [...image.pixels];
-          //s.arrayCopy(image.pixels, px);    //store the image's pixels once and for all
           image.updatePixels();
           offset = this.width / 2 + this.height / 2;//in order to center the image but not in JS :'(
         }
@@ -81,9 +84,9 @@ export default class P5Renderer implements BaseRenderer{
         if (this.animating) { 
             s.background(0, 0, 0, 255);
 
-            dw += s.map(100, 0, s.width, .16, -.16);  //oscilation speed
-            dh += s.map(100, 0, s.height, .16, -.16); //oscilation speed
-              
+            dw += s.map(100, 0, s.width, .16, -0.16);  //oscilation speed
+            dh += s.map(100, 0, s.height, .16, -0.16); //oscilation speed
+            
             s.loadPixels();
             
             for (let i = 0; i < image.width; i++)
@@ -96,24 +99,23 @@ export default class P5Renderer implements BaseRenderer{
                 if ((image.width - w) / 2 <= i 
                 && i < (image.width + w) / 2
                 && ((image.height - h) / 2 <= j 
-                && j < (image.height + h) / 2))//check that pixels are within the new frame
+                && j < (image.height + h) / 2)) //check that pixels are within the new frame
                 {
-                    let mapY = s.map(j, (image.height - h) / 2, (image.height + h) / 2, 0, image.height - 1);
-                    let mapX = s.map(i, (image.width - w) / 2, (image.width + w) / 2, 0, image.width - 1);
-                   
+                    let mapX = Math.round(s.map(i, (image.width - w) / 2, (image.width + w) / 2 - 1, 0, image.width - 1));
+                    let mapY = Math.round(s.map(j, (image.height - h) / 2, (image.height + h) / 2 - 1, 0, image.height - 1));
+
                     let index = 4 * (s.width * j + i);
-                    let index2 = 4 * Math.floor((image.width * mapY + mapX));
+                    let index2 = 4 * (image.width * mapY + mapX);
 
                     s.pixels[index] = px[index2];
-                    s.pixels[index+1] = px[index2 + 1];
-                    s.pixels[index+2] = px[index2 + 2];
-                    s.pixels[index+3] = px[index2 + 3];
+                    s.pixels[index + 1] = px[index2 + 1];
+                    s.pixels[index + 2] = px[index2 + 2];
+                    s.pixels[index + 3] = px[index2 + 3];
                 }
               }
             }
             
             s.updatePixels();
-
         }
     }
 
