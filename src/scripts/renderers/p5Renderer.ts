@@ -8,6 +8,7 @@ const srandom = seedrandom('b');
 let particles = [];
 
 let image;
+let warpedImage;
 let dw = 0, dh = 0;
 let freq;
 let minSize;
@@ -52,20 +53,17 @@ export default class P5Renderer implements BaseRenderer{
         let renderer = s.createCanvas(this.width, this.height);
         this.canvas = renderer.canvas;
 
-        image = s.createGraphics(this.width, this.height);
+        let scale = 3;
+        image = s.createGraphics(this.width * scale, this.height * scale);
+        warpedImage = s.createGraphics(this.width * scale, this.height * scale);
 
-        /*
         image.strokeCap(s.PROJECT);
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < image.width; i++) {
             image.strokeWeight(10 + srandom() * 20);
             image.line(-image.width + (i * 10), image.height, image.width, -image.height + (i * 10));
             image.stroke(this.colors[Math.floor(srandom() * this.colors.length)]);
         }
-        */
-        image.fill(255, 0, 0);
-        image.rect(0, 20, this.width, 20);
-        image.circle(this.width / 2, this.height / 2, 100);
-
+        
         //this.animating = false;
         //s.image(image, 0, 0, s.width, s.height);
         
@@ -87,7 +85,7 @@ export default class P5Renderer implements BaseRenderer{
             dw += s.map(100, 0, s.width, .16, -0.16);  //oscilation speed
             dh += s.map(100, 0, s.height, .16, -0.16); //oscilation speed
             
-            s.loadPixels();
+            warpedImage.loadPixels();
             
             for (let i = 0; i < image.width; i++)
             {
@@ -101,21 +99,27 @@ export default class P5Renderer implements BaseRenderer{
                 && ((image.height - h) / 2 <= j 
                 && j < (image.height + h) / 2)) //check that pixels are within the new frame
                 {
-                    let mapX = Math.round(s.map(i, (image.width - w) / 2, (image.width + w) / 2 - 1, 0, image.width - 1));
-                    let mapY = Math.round(s.map(j, (image.height - h) / 2, (image.height + h) / 2 - 1, 0, image.height - 1));
+                    let mapX = Math.round(s.map(i, (image.width - w) / 2, (image.width + w) / 2, 0, image.width - 1));
+                    let mapY = Math.round(s.map(j, (image.height - h) / 2, (image.height + h) / 2, 0, image.height - 1));
 
-                    let index = 4 * (s.width * j + i);
+                    let index = 4 * (warpedImage.width * j + i);
                     let index2 = 4 * (image.width * mapY + mapX);
 
-                    s.pixels[index] = px[index2];
-                    s.pixels[index + 1] = px[index2 + 1];
-                    s.pixels[index + 2] = px[index2 + 2];
-                    s.pixels[index + 3] = px[index2 + 3];
+                    warpedImage.pixels[index] = px[index2];
+                    warpedImage.pixels[index + 1] = px[index2 + 1];
+                    warpedImage.pixels[index + 2] = px[index2 + 2];
+                    warpedImage.pixels[index + 3] = px[index2 + 3];
                 }
               }
             }
             
-            s.updatePixels();
+            warpedImage.updatePixels();
+
+            let scale = 2;
+            s.translate(-s.width / scale, -s.height / scale);
+            s.scale(scale);
+            s.image(warpedImage, 0, 0, s.width, s.height);
+
         }
     }
 
