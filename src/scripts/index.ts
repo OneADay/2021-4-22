@@ -24,8 +24,8 @@ class App {
         
         if (debugging !== null) {
             this.debugging = true;
-            width = 300;
-            height = 300;
+            width = 600;
+            height = 600;
             this.debug = new DebugUI();
             this.debug.recordBtn.addEventListener('click', () => this.handleRecordBtnClick())
             this.debug.formatSelect.addEventListener('change', () => this.handleFormatSelectChange())

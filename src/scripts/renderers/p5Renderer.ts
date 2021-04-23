@@ -17,7 +17,7 @@ let offset;
 
 export default class P5Renderer implements BaseRenderer{
 
-    colors = ['#D1CDC4', '#340352', '#732A70', '#FF6EA7', '#FFE15F'];
+    colors = ['#D9308D', '#EFEB8C', '#2C1D75', '#5E8C18', '#A7F205'];
     backgroundColor = '#FFFFFF';
 
     canvas: HTMLCanvasElement;
@@ -136,7 +136,7 @@ export default class P5Renderer implements BaseRenderer{
             if (this.completeCallback) {
                 this.completeCallback();
             }
-        }, 10000);
+        }, 1000);
     }
 
     public stop() {
